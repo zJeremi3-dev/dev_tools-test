@@ -101,7 +101,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
               height: 40,
               child: SearchBar(
                 leading: Icon(Icons.search, color: kTextSecondary, size: 18),
-                hintText: "Search",
+                hintText: "Hallo123",
                 hintStyle: WidgetStateProperty.all(
                   TextStyle(color: kTextSecondary, fontSize: 13),
                 ),
