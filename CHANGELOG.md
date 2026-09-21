@@ -9,8 +9,11 @@ the installer today get the most recent *tagged* version below.
 
 ## [Unreleased]
 
+
+## [1.1.0] - YYYY-MM-DD
+
 ### Added
-- (nothing yet)
+- Searchbar - "Search" -> "Hallo123"
 
 ## [1.0.0] - YYYY-MM-DD
 
