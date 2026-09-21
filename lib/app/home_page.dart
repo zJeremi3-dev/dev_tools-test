@@ -10,6 +10,9 @@ import '../models/tool_module.dart';
 import '../settings/settings.dart';
 import '../widgets/widgets.dart';
 
+import 'dart:io';
+import '../services/self_updater.dart';
+
 class MyHomePage extends ConsumerStatefulWidget {
   const MyHomePage({super.key, required this.title});
   final String title;
@@ -193,7 +196,14 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                     Icons.system_update_alt,
                     color: Colors.amber,
                   ),
-                  onPressed: () => launchUrl(Uri.parse(update.releaseUrl)),
+                  onPressed: () async {
+                    if (Platform.isWindows &&
+                        update.windowsDownloadUrl != null) {
+                      await downloadAndInstall(update.windowsDownloadUrl!);
+                    } else {
+                      launchUrl(Uri.parse(update.releaseUrl));
+                    }
+                  },
                 ),
               );
             },

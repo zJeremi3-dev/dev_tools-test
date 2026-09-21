@@ -10,6 +10,10 @@ import 'package:flutter/material.dart';
 import '../services/update_checker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'dart:io';
+import 'package:package_info_plus/package_info_plus.dart';
+import '../services/self_updater.dart';
+
 class SettingsDialog extends StatefulWidget {
   final List<ToolModule> tools;
   final List<double> hideOrder;
@@ -39,6 +43,16 @@ class _SettingsDialogState extends State<SettingsDialog> {
       widget.tools.where((t) => widget.hideOrder.contains(t.id)).toList();
   List<ToolModule> get _visibleTools =>
       widget.tools.where((t) => !widget.hideOrder.contains(t.id)).toList();
+
+  String _appVersion = '';
+
+  @override
+  void initState() {
+    super.initState();
+    PackageInfo.fromPlatform().then((info) {
+      if (mounted) setState(() => _appVersion = info.version);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,8 +107,15 @@ class _SettingsDialogState extends State<SettingsDialog> {
                     ),
                   ),
                   TextButton(
-                    onPressed: () =>
-                        launchUrl(Uri.parse(widget.updateInfo!.releaseUrl)),
+                    onPressed: () async {
+                      final info = widget.updateInfo!;
+                      if (Platform.isWindows &&
+                          info.windowsDownloadUrl != null) {
+                        await downloadAndInstall(info.windowsDownloadUrl!);
+                      } else {
+                        launchUrl(Uri.parse(info.releaseUrl));
+                      }
+                    },
                     child: const Text('Update'),
                   ),
                 ],
@@ -154,6 +175,28 @@ class _SettingsDialogState extends State<SettingsDialog> {
               ModuleLayoutSection(
                 initialValue: widget.moduleLayout,
                 onChanged: widget.onLayoutChange,
+              ),
+              SizedBox(
+                width: 300,
+                height: 35,
+                child: OutlinedButton.icon(
+                  onPressed: () => showLicensePage(
+                    context: context,
+                    applicationName: 'Dev-Tools',
+                    applicationVersion: _appVersion,
+                  ),
+                  icon: Icon(Icons.description_outlined, color: kAccentLight),
+                  label: Text(
+                    "Licenses",
+                    style: TextStyle(color: kTextPrimary, fontSize: 20),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    side: BorderSide(color: kAccent.withAlpha(100), width: 1.5),
+                  ),
+                ),
               ),
             ],
           ),

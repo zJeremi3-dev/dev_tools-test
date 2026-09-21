@@ -8,6 +8,8 @@ on:
 jobs:
   build-windows-installer:
     runs-on: windows-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository
@@ -23,6 +25,12 @@ jobs:
 
       - name: Install dependencies
         run: flutter pub get
+
+      - name: Sync pubspec version with tag
+        shell: bash
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          sed -i "s/^version: .*/version: ${VERSION}+${GITHUB_RUN_NUMBER}/" pubspec.yaml
 
       - name: Run tests
         run: flutter test

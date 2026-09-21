@@ -70,3 +70,14 @@ Not yet covered: RSA key *generation* itself (only the encrypt/decrypt tester mo
 
 - Color scheme is implemented via global mutable variables (`colors.dart`) rather than a fully Riverpod-driven theme — a pragmatic tradeoff for a single-screen app, flagged as technical debt rather than hidden.
 - Test coverage is partial (see above).
+
+
+## A note on the Windows security warning
+
+Windows SmartScreen may warn that this installer is from an "unknown
+publisher." This is expected for small open-source projects without a
+paid code-signing certificate — it does **not** mean the file is
+malicious. The installer is built automatically and transparently from
+this repository's source via GitHub Actions (see `.github/workflows/release.yml`).
+
+If you see the warning: click **"More info" → "Run anyway"**.
